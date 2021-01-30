@@ -1,0 +1,7 @@
+name: TrollProtectPlugin
+version: @version@
+main: trollprotectplugin.trollprotectplugin.TPP
+api-version: 1.16
+
+commands:
+  tpp:

@@ -1,0 +1,3 @@
+blocklist:
+  - DIAMOND_BLOCK:30 #←例
+  - LAVA_BUCKET:60 #←液体の例
