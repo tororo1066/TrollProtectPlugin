@@ -115,7 +115,6 @@ class TPP : JavaPlugin(),Listener {
     fun putbucket(e : PlayerBucketEmptyEvent){
         if (!mode)return
         val material = e.bucket.name
-        e.player.sendMessage(material)
         for (c in 0..config.getStringList("blocklist").size.minus(1)){
             val r = config.getStringList("blocklist")[c].split(":")
             if (r[0] == material && r[1].toInt() < e.block.y){
