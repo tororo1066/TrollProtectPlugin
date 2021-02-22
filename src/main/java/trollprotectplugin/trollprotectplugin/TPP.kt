@@ -1,5 +1,6 @@
 package trollprotectplugin.trollprotectplugin
 
+import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -85,6 +86,12 @@ class TPP : JavaPlugin(),Listener {
                 sender.sendMessage("$prefix/tpp reloadで設定を更新してください")
             }
 
+            "reset"->{
+                val l = config.getStringList("blocklist")
+                l.clear()
+                config.set("blocklist",l)
+            }
+
             "reload"->{
                 saveConfig()
                 sender.sendMessage(prefix + "configのreloadが完了しました")
@@ -114,6 +121,7 @@ class TPP : JavaPlugin(),Listener {
     @EventHandler
     fun putbucket(e : PlayerBucketEmptyEvent){
         if (!mode)return
+        if (e.bucket == Material.MILK_BUCKET)return
         val material = e.bucket.name
         for (c in 0..config.getStringList("blocklist").size.minus(1)){
             val r = config.getStringList("blocklist")[c].split(":")
@@ -124,4 +132,7 @@ class TPP : JavaPlugin(),Listener {
 
         }
     }
+
+
+
 }
