@@ -9,6 +9,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockCanBuildEvent
 import org.bukkit.event.player.PlayerBucketEmptyEvent
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.*
 
 class TPP : JavaPlugin(),Listener {
 
@@ -68,19 +69,19 @@ class TPP : JavaPlugin(),Listener {
             }
 
             "set"->{
-                if (args.size != 3){
+                if (args.size != 2){
                     sender.sendMessage(prefix + "args.sizeが非正規です！")
                     return true
                 }
                 val n : Int
                 try {
-                    n = args[2].toInt()
+                    n = args[1].toInt()
                 }catch (e : NumberFormatException){
-                    sender.sendMessage(prefix + "args[2]には数字を指定してください！")
+                    sender.sendMessage(prefix + "args[1]には数字を指定してください！")
                     return true
                 }
                 val l = config.getStringList("blocklist")
-                l.add("${args[1]}:$n")
+                l.add("${sender.inventory.itemInMainHand.type.name}:$n:${sender.world.uid}")
                 config.set("blocklist",l)
                 sender.sendMessage(prefix + "設定が完了しました")
                 sender.sendMessage("$prefix/tpp reloadで設定を更新してください")
@@ -109,7 +110,7 @@ class TPP : JavaPlugin(),Listener {
         val material = e.material.name
         for (c in 0..config.getStringList("blocklist").size.minus(1)){
             val r = config.getStringList("blocklist")[c].split(":")
-            if (r[0] == material && r[1].toInt() < e.block.y){
+            if (r[0] == material && r[1].toInt() < e.block.y && UUID.fromString(r[2]) == e.block.world.uid){
                 e.player?.sendMessage(prefix + "§c${r[0]}はY${r[1]}より下にしか置けません！")
                 e.isBuildable = false
             }
@@ -125,7 +126,7 @@ class TPP : JavaPlugin(),Listener {
         val material = e.bucket.name
         for (c in 0..config.getStringList("blocklist").size.minus(1)){
             val r = config.getStringList("blocklist")[c].split(":")
-            if (r[0] == material && r[1].toInt() < e.block.y){
+            if (r[0] == material && r[1].toInt() < e.block.y && UUID.fromString(r[2]) == e.block.world.uid){
                 e.player.sendMessage(prefix + "§c${r[0]}はY${r[1]}より下にしか置けません！")
                 e.isCancelled = true
             }
